@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسک دوره جاوااسکریپت</title>
+    <link rel="stylesheet" href="./styles/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>لیست تراکنش‌ها</h1>
+        <div class="search-box hidden">
+          <form action="" class="search-form">
+            <input
+              type="text"
+              class="searchbox"
+              placeholder="جستجوی تراکنش..."
+            />
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </form>
+        </div>
+      </header>
+
+      <main class="transactions hidden">
+        <div class="container transactions__content">
+          <h2>لیست تراکنش‌‌های شما</h2>
+          <div class="table-container">
+            <table class="transaction__table">
+              <thead class="table-head">
+                <tr>
+                  <th>ردیف</th>
+                  <th>نوع تراکنش</th>
+                  <th data-column="price" data-order="desc">
+                    مبلغ<i class="fa-solid fa-chevron-up"></i>
+                  </th>
+                  <th>شماره پیگیری</th>
+                  <th data-column="date" data-order="desc">
+                    تاریخ تراکنش<i class="fa-solid fa-chevron-up"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="table-body">
+                <!-- <tr>
+                  <td>1</td>
+                  <td class="deposit">افزایش اعتبار</td>
+                  <td>1,000,000</td>
+                  <td>123126411</td>
+                  <td>12/08/1399 ساعت 12:33</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td class="withdrawal">برداشت اعتبار</td>
+                  <td>1,000,000</td>
+                  <td>123126411</td>
+                  <td>12/08/1399 ساعت 12:33</td>
+                </tr> -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+
+      <button class="btn primary-btn" id="load-transactions">
+        بارگذاری تراکنش‌ها
+      </button>
+    </div>
+    <script src="./js/index.js"></script>
+  </body>
+</html>
