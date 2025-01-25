@@ -190,3 +190,7 @@ h2 {
 .deposit {
   color: var(--color-success);
 }
+
+.table-head tr th {
+  cursor: pointer;
+}

@@ -6,16 +6,16 @@ const loadTransactionsBtn = document.querySelector("#load-transactions");
 const searchBoxContainer = document.querySelector(".search-box");
 const transactionContent = document.querySelector(".transactions");
 const tableBody = document.querySelector(".table-body");
+const searchInput = document.querySelector(".searchbox");
+const priceColumn = document.querySelector('[data-column="price"]');
+const dateColumn = document.querySelector('[data-column="date"]');
 
-// Class for API handler
+// Static class for API handler and fethcing data
 class APIHandler {
-  constructor(apiURL) {
-    this.api = apiURL;
-  }
-  fetchData(params = "") {
-    console.log("Fetching data from:", `${this.api}${params}`);
+  static fetchData(apiURL, params = "") {
+    console.log("Fetching data from:", `${apiURL}${params}`);
     return axios
-      .get(`${this.api}${params}`)
+      .get(`${apiURL}${params}`)
       .then((res) => {
         return res.data;
       })
@@ -25,11 +25,10 @@ class APIHandler {
   }
 }
 
-// Class to render transaction data in a table
+// Class to render transaction data in a table, DOM
 class TableRenderer {
-  constructor(apiHandler) {
+  constructor() {
     this.tableBody = tableBody;
-    this.apiHandler = apiHandler;
   }
 
   renderUI(data) {
@@ -58,19 +57,29 @@ class TableRenderer {
     });
     this.tableBody.innerHTML = result;
   }
+
+  searchInData(e) {
+    const query = e.target.value.trim();
+    const param = `?refId_like=${query}`;
+    APIHandler.fetchData(apiURL, param)
+      .then((data) => {
+        this.renderUI(data);
+      })
+      .catch((err) => console.log("Error:", err));
+  }
 }
 
 // Main class
 class TransactionsApp {
   constructor(apiURL) {
-    this.apiHandler = new APIHandler(apiURL);
-    this.tableRenderer = new TableRenderer(this.apiHandler);
-    loadTransactionsBtn.addEventListener("click", () => this.setApp());
+    this.tableRenderer = new TableRenderer();
+    loadTransactionsBtn.addEventListener("click", () => {
+      this.setApp();
+    });
   }
 
   setApp() {
-    this.apiHandler
-      .fetchData()
+    APIHandler.fetchData(apiURL)
       .then((data) => {
         loadTransactionsBtn.classList.add("hidden");
         searchBoxContainer.classList.remove("hidden");
@@ -80,13 +89,17 @@ class TransactionsApp {
         this.tableRenderer.renderUI(data);
       })
       .catch((err) => console.log("Error:", err));
+    const searchInput = document.querySelector(".searchbox");
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+      }
+      this.tableRenderer.searchInData(e);
+    });
   }
 }
 
 // Initialize
-// document.addEventListener("DOMContentLoaded", () => {
-//   console.log("DOM Loaded");
-
-// });
-
-new TransactionsApp(apiURL);
+document.addEventListener("DOMContentLoaded", () => {
+  new TransactionsApp(apiURL);
+});
