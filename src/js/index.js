@@ -35,18 +35,26 @@ class TableRenderer {
   renderUI(data) {
     let result = "";
     data.forEach((item) => {
-      console.log("Transaction item:", item); // Check each item's structure
+      const formattedPrice = new Intl.NumberFormat().format(item.price);
+
+      let type = "";
+
+      if (item.type === "افزایش اعتبار") {
+        type = "deposit";
+      } else if (item.type === "برداشت از حساب") {
+        type = "withdrawal";
+      }
       result += `<tr>
-                    <td>${item.id}</td>
-                    <td>${item.type}</td>
-                    <td>${item.price}</td>
-                    <td>${item.refId}</td>
-                    <td>${new Date(item.date).toLocaleDateString(
-                      "fa-IR"
-                    )} ساعت ${new Date(item.date).toLocaleTimeString(
+                  <td>${item.id}</td>
+                  <td class="${type}">${item.type}</td>
+                  <td>${formattedPrice}</td>  <!-- Use formatted price -->
+                  <td>${item.refId}</td>
+                  <td>${new Date(item.date).toLocaleDateString(
+                    "fa-IR"
+                  )} ساعت ${new Date(item.date).toLocaleTimeString(
         "fa-IR"
       )}</td>
-                  </tr>`;
+                </tr>`;
     });
     this.tableBody.innerHTML = result;
   }
