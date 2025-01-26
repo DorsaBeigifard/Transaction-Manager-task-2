@@ -171,7 +171,8 @@ h2 {
   transition: background-color 0.3s ease-in-out;
 }
 
-.fa-chevron-up {
+.fa-chevron-up,
+.fa-chevron-down {
   margin-right: 1rem;
   font-size: 1.2rem;
   color: var(--color-secondary-400);
@@ -179,7 +180,8 @@ h2 {
   transition: color 0.3s ease-in-out;
 }
 
-.fa-chevron-up:hover {
+.fa-chevron-up:hover,
+.fa-chevron-down:hover {
   color: var(--color-primary-800);
 }
 

@@ -89,12 +89,15 @@ class TableRenderer {
         // update sorting icon
         thBtns.forEach((btn) => {
           const icon = btn.querySelector("i");
-          if (btn === th) {
-            icon.classList.toggle("fa-chevron-up", newOrder === "asc");
-            icon.classList.toggle("fa-chevron-down", newOrder === "desc");
-          } else {
-            icon.classList.remove("fa-chevron-up", "fa-chevron-down");
-          }
+          btn.addEventListener("click", () => {
+            if (newOrder === "asc") {
+              if (icon) icon.classList.add("fa-chevron-up");
+              if (icon) icon.classList.remove("fa-chevron-down");
+            } else if (newOrder === "desc") {
+              if (icon) icon.classList.add("fa-chevron-down");
+              if (icon) icon.classList.remove("fa-chevron-up");
+            }
+          });
         });
       })
       .catch((err) => console.log(err));
