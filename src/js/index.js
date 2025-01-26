@@ -25,7 +25,7 @@ class APIHandler {
       })
       .catch((err) => {
         console.log("Error while fetching data:", err);
-        return []; // Return an empty array if there's an error
+        return [];
       });
   }
 }
@@ -73,36 +73,19 @@ class TableRenderer {
       .catch((err) => console.log("Error:", err));
   }
 
-  sortData() {
-    thBtns.forEach((th) => {
-      let column = th.dataset.column;
-      let order = th.dataset.order;
+  sortData(column, order, icon) {
+    const param = `?_sort=${column}&_order=${order}`;
+    APIHandler.fetchData(apiURL, param)
+      .then((data) => {
+        this.renderUI(data);
 
-      // toggle order
-      if (order === "desc") {
-        order = "asc";
-      } else {
-        order = "desc";
-      }
-      th.dataset.order = order;
-
-      // which column are we sorting?
-      let sortField;
-      if (column === "price") {
-        sortField = "price";
-      } else if (column === "date") {
-        sortField = "date";
-      }
-
-      if (!sortField) return; // do nothing
-
-      const param = `?_sort=${sortField}&_order=${order}`;
-      APIHandler.fetchData(apiURL, param)
-        .then((data) => {
-          this.renderUI(data);
-        })
-        .catch((err) => console.log("Error:", err));
-    });
+        // Update sorting icon
+        if (icon) {
+          icon.classList.toggle("fa-chevron-up", order === "asc");
+          icon.classList.toggle("fa-chevron-down", order === "desc");
+        }
+      })
+      .catch((err) => console.log(err));
   }
 }
 
@@ -121,12 +104,12 @@ class TransactionsApp {
         loadTransactionsBtn.classList.add("hidden");
         searchBoxContainer.classList.remove("hidden");
         transactionContent.classList.remove("hidden");
-
         // Display in DOM
         this.tableRenderer.renderUI(data);
       })
       .catch((err) => console.log("Error:", err));
-    const searchInput = document.querySelector(".searchbox");
+
+    // search
     searchInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -134,13 +117,16 @@ class TransactionsApp {
       this.tableRenderer.searchInData(e);
     });
 
+    //sort
     thBtns.forEach((th) => {
       th.addEventListener("click", () => {
         const column = th.dataset.column;
-        const order = th.dataset.order;
+        const currentOrder = th.dataset.order;d
+        const newOrder = currentOrder === "desc" ? "asc" : "desc";
+        th.dataset.order = newOrder;
 
-        // Call sortData with the column and current order
-        this.tableRenderer.sortData();
+        const icon = th.querySelector(".fa-solid");
+        this.tableRenderer.sortData(column, newOrder, icon);
       });
     });
   }
