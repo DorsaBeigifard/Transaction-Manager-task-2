@@ -1,7 +1,5 @@
 # Transaction-Manager
 
-# Transactions Manager
-
 A **JavaScript project** that dynamically fetches and displays transaction data from an API, allowing users to search, sort, and interact with the data seamlessly.
 
 ## Features
