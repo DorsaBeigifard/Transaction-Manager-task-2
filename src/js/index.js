@@ -60,11 +60,12 @@ class TableRenderer {
 
   searchInData(e) {
     const query = e.target.value.trim();
-    // Do we have any search query or not
-    currentSearchParam = query ? `&refId_like=${query}` : "";
+    currentSearchParam = query ? `refId_like=${query}` : "";
 
-    const combinedParams = `${currentSortParam}${currentSearchParam}`;
-    APIHandler.fetchData(apiURL, combinedParams)
+    const combinedParams = [currentSortParam, currentSearchParam].join("&");
+
+    const urlWithParams = `?${combinedParams}`;
+    APIHandler.fetchData(apiURL, urlWithParams)
       .then((data) => {
         this.renderUI(data);
       })
@@ -75,32 +76,34 @@ class TableRenderer {
     const column = th.dataset.column;
     const order = th.dataset.order;
 
-    //toggle direction
+    // Toggle sort order
     th.dataset.order = order === "asc" ? "desc" : "asc";
     const newOrder = th.dataset.order;
 
-    currentSortParam = `?_sort=${column}&_order=${newOrder}`;
-    const combinedParams = `${currentSortParam}${currentSearchParam}`;
+    currentSortParam = `_sort=${column}&_order=${newOrder}`; // Sort parameter
 
-    APIHandler.fetchData(apiURL, combinedParams)
+    const combinedParams = [currentSortParam, currentSearchParam].join("&"); //both sort and search
+
+    const urlWithParams = `?${combinedParams}`;
+    APIHandler.fetchData(apiURL, urlWithParams)
       .then((data) => {
         this.renderUI(data);
 
-        // update sorting icon
+        // Update sorting icon
         thBtns.forEach((btn) => {
           const icon = btn.querySelector("i");
-          btn.addEventListener("click", () => {
+          if (icon) {
             if (newOrder === "asc") {
-              if (icon) icon.classList.add("fa-chevron-up");
-              if (icon) icon.classList.remove("fa-chevron-down");
-            } else if (newOrder === "desc") {
-              if (icon) icon.classList.add("fa-chevron-down");
-              if (icon) icon.classList.remove("fa-chevron-up");
+              icon.classList.add("fa-chevron-up");
+              icon.classList.remove("fa-chevron-down");
+            } else {
+              icon.classList.add("fa-chevron-down");
+              icon.classList.remove("fa-chevron-up");
             }
-          });
+          }
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("Error:", err));
   }
 }
 
@@ -120,6 +123,12 @@ class TransactionsApp {
         this.tableRenderer.renderUI(data);
       })
       .catch((err) => console.log("Error:", err));
+
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+      }
+    });
 
     searchInput.addEventListener("input", (e) => {
       this.tableRenderer.searchInData(e);
